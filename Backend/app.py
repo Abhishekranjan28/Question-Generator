@@ -8,7 +8,7 @@ app = Flask(__name__)
 logging.basicConfig(level=logging.INFO)
 
 # Get the Hugging Face API key from environment variables
-HUGGING_FACE_API_KEY = os.getenv('HUGGING_FACE_API_KEY')
+HUGGING_FACE_API_KEY = os.environ.get('HUGGING_FACE_API_KEY')
 HF_API_URL = "https://api-inference.huggingface.co/models/t5-base"  # Example model URL
 
 # Ensure the API key is available
