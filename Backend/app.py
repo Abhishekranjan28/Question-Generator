@@ -1,13 +1,12 @@
 from flask import Flask, request, jsonify
 import requests
-
-app = Flask(__name__)
-
-# app.py
 import os
 from dotenv import load_dotenv
 
-load_dotenv()  # Load environment variables from .env file
+app = Flask(__name__)
+
+# Load environment variables from .env file
+load_dotenv()
 
 HUGGING_FACE_API_KEY = os.getenv('HUGGING_FACE_API_KEY')
 
@@ -19,6 +18,20 @@ headers = {
     "Authorization": f"Bearer {HUGGING_FACE_API_KEY}",
     "Content-Type": "application/json"
 }
+
+def generate_questions_with_huggingface(prompt):
+    payload = {
+        "inputs": prompt,
+        "parameters": {
+            "max_length": 100,
+            "num_return_sequences": 3,
+            "num_beams": 3,
+        }
+    }
+
+    response = requests.post(HF_API_URL, headers=headers, json=payload)
+    response.raise_for_status()  # Raise an error for bad responses
+    return response.json()
 
 @app.route('/')
 def home():
@@ -47,4 +60,4 @@ def generate_questions():
         return jsonify({'error': 'Internal server error.'}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)  # Ensure the port matches the one you are trying to access
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))  # Ensure it listens on all interfaces
