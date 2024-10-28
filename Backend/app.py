@@ -16,7 +16,7 @@ HF_API_URL = "https://api-inference.huggingface.co/models/t5-base"  # Replace wi
 
 # Set up headers for API requests
 headers = {
-    "Authorization": f"Bearer {HF_API_TOKEN}",
+    "Authorization": f"Bearer {HUGGING_FACE_API_KEY}",
     "Content-Type": "application/json"
 }
 
