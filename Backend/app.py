@@ -22,29 +22,22 @@ def generate_questions():
     try:
         data = request.get_json()
         prompt = data.get('prompt')
-        
-        # Create the payload for the Hugging Face API
-        payload = {
-            "inputs": prompt,
-            "parameters": {
-                "max_length": 100,
-                "num_return_sequences": 3,
-                "num_beams": 3
-            }
-        }
-        
-        # Make a POST request to the Hugging Face API
-        response = requests.post(HF_API_URL, headers=headers, json=payload)
-        response.raise_for_status()  # Raise an error for bad responses
 
-        # Extract generated questions from the response
-        questions = response.json()
-        questions = [res['generated_text'] for res in questions]
-        
+        # Check if prompt is provided
+        if not prompt:
+            return jsonify({'error': 'Prompt is required.'}), 400
+
+        # Generate questions based on the provided prompt
+        result = generate_questions_with_huggingface(prompt)
+        questions = [res['generated_text'] for res in result]
+
         return jsonify({'questions': questions})
+    except requests.exceptions.HTTPError as http_err:
+        app.logger.error(f"HTTP error occurred: {http_err}")
+        return jsonify({'error': 'Failed to call Hugging Face API.'}), 500
     except Exception as e:
-        app.logger.error(f"Error during model prediction: {e}")
-        return jsonify({'error': str(e)}), 500
+        app.logger.error(f"Unexpected error: {e}")
+        return jsonify({'error': 'Internal server error.'}), 500
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)  # Ensure the port matches the one you are trying to access
