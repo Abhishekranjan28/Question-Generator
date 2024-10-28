@@ -3,9 +3,16 @@ import requests
 
 app = Flask(__name__)
 
+# app.py
+import os
+from dotenv import load_dotenv
+
+load_dotenv()  # Load environment variables from .env file
+
+HUGGING_FACE_API_KEY = os.getenv('HUGGING_FACE_API_KEY')
+
 # Hugging Face API settings
 HF_API_URL = "https://api-inference.huggingface.co/models/t5-base"  # Replace with the specific model you want to use
-HF_API_TOKEN = "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"  # Replace with your Hugging Face API token
 
 # Set up headers for API requests
 headers = {
