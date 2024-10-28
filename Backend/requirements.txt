@@ -1,7 +1,4 @@
 Flask==2.3.3
-transformers==4.34.0
-torch==2.0.1
 python-dotenv==1.0.0
-streamlit==1.26.0
 requests==2.31.0
 gunicorn==20.1.0
