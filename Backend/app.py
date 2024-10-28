@@ -38,10 +38,15 @@ def generate_questions_with_huggingface(prompt):
         }
     }
     
-    # API call to Hugging Face
-    response = requests.post(HF_API_URL, headers=headers, json=payload)
-    response.raise_for_status()  # Will raise an error for non-200 responses
-    return response.json()
+    try:
+        # API call to Hugging Face
+        response = requests.post(HF_API_URL, headers=headers, json=payload)
+        response.raise_for_status()  # Will raise an error for non-200 responses
+        logging.info(f"Response from Hugging Face: {response.json()}")  # Log the response
+        return response.json()
+    except requests.exceptions.HTTPError as e:
+        logging.error(f"Hugging Face API returned an error: {e.response.text}")  # Log the error response
+        raise  # Re-raise to be caught in the route
 
 # Route to handle question generation
 @app.route('/generate', methods=['POST'])
